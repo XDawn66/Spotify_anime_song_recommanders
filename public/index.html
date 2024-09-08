@@ -126,14 +126,34 @@
             <div class="deviceswindows-content">
               <span>Connect to a Device</span>
               <span class="deviceswindows_close">&times;</span>
-              <ul id="deviceList">
+              <ul id="deviceList" class="DV">
                 <!-- List of devices will be populated here -->
               </ul>
             </div>
           </div>
-          <button id="option1">Option1</button>
-          <button id="option2">Option2</button>
-          <button id="option3">Option3</button>
+          <div class="addsongs">
+            <div class="BTN1">
+              <button id="option1">ADD</button>
+              <button id="option1_u">Undo</button>
+            </div>
+            <div class="BTN2">
+              <button id="option2">ADD</button>
+              <button id="option2_u">Undo</button>
+            </div>
+            <div class="BTN3">
+              <button id="option3">ADD</button>
+              <button id="option3_u">Undo</button>
+            </div>
+          </div>
+        </div>
+        <div id="playlistPopup" class="popup">
+          <div class="popup-header">
+            <h4>Choose the Playlist that you want to add</h4>
+            <button id="closePopup">&times</button>
+          </div>
+          <div class="popup-body" id="playlistContainer">
+            <!-- Spotify playlist will be loaded here -->
+          </div>
         </div>
       </section>
 
