@@ -5,8 +5,9 @@
 */
 
 // spotify autherzation
-var client_id = "96b2f974cbfe48908a7675c8284a03eb";
-var client_secret = "e2a20fb86c4d443989276aa4110d0e1c";
+
+var client_id = "";
+var client_secret = "";
 const redirect_uri = "http://localhost:5500/";
 
 const authorize = "https://accounts.spotify.com/authorize";
@@ -42,6 +43,8 @@ function Autherzation() {
 }
 
 function pageload() {
+  client_id = localStorage.getItem("client_id");
+  client_secret = localStorage.getItem("client_secret");
   if (window.location.search.length > 0) {
     handleRedirect();
   }
@@ -472,6 +475,11 @@ function remove_song(playlist_id, track_uri = current_track_uri) {
   });
 
   $("#login").click(function () {
+    client_id = prompt("Please enter your client id");
+    client_secret = prompt("Please enter your client secret");
+    localStorage.setItem("client_id", client_id);
+    localStorage.setItem("client_secret", client_secret);
+
     Autherzation();
   });
 
