@@ -16,16 +16,18 @@ let playlist = "";
 let tracks = "";
 let device_id = "";
 let device_id_index = 0;
-let song1 = {};
-let song2 = {};
-let song3 = {};
+let songlist = [];
 let userID = "";
 let selected_playlist_id = "";
 let current_track_uri = "";
+let limit = 3;
 
 var small_window = document.getElementById("deviceswindows");
-var openBtn = document.getElementById("Show_Devices");
-var closeBtn = document.getElementsByClassName("deviceswindows_close")[0];
+const option1 = document.getElementById("option1");
+const option2 = document.getElementById("option2");
+const option3 = document.getElementById("option3");
+const popplaylist = document.getElementById("playlistPopup");
+const closePlaylist = document.getElementById("closePopup");
 
 function Autherzation() {
   let url = authorize;
@@ -36,7 +38,6 @@ function Autherzation() {
   //defining the range of access
   url +=
     "&scope=user-read-private user-library-read playlist-read-private user-read-recently-played user-top-read app-remote-control streaming user-read-playback-state playlist-modify-public playlist-modify-private";
-  //"&scope=user-read-private user-library-read playlist-read-private user-read-recently-played user-top-read";
   window.location.href = url;
 }
 
@@ -49,6 +50,7 @@ function pageload() {
 function handleRedirect() {
   let code = getCode();
   fetchAccessToken(code);
+  //clear the website url to redirect uri
   window.history.pushState("", "", redirect_uri);
 }
 
@@ -99,39 +101,40 @@ function handleAuthResponse() {
     var data = JSON.parse(this.responseText);
     if (data.access_token != undefined) {
       access_token = data.access_token;
-      localStorage.setItem("access_token", access_token);
       console.log(access_token);
+      localStorage.setItem("access_token", access_token);
     }
     if (data.refresh_token != undefined) {
       refresh_token = data.refresh_token;
       localStorage.setItem("refresh_token", refresh_token);
     }
-    //getSongs();
   } else {
-    console.log(this.responseText);
     alert(this.responseText);
   }
 }
-
+// a function that will return random int between value from min to max
 function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+// building the getting popular anime playlist end point and do api call
 function getPlaylist() {
   let rank = randomInt(3, 0);
   playlist = `https://api.spotify.com/v1/browse/categories/anime/playlists?limit=1&offset=${rank}`;
-  console.log(playlist);
-  callApi("GET", playlist, null, handlePlaylistResponse);
+  current_api_response = "PlayList";
+  callApi("GET", playlist, null, handleResponse, "PlayList");
 }
 
 function getSongs() {
+  // if the user didn't click get playlist
   if (playlist == "") {
     alert("Please login and get the playlist first!");
   }
-  callApi("GET", tracks, null, handleSongResponse);
+  callApi("GET", tracks, null, handleResponse, "songList");
 }
 
-function callApi(method, url, body, callback) {
+//the general spotify api call format (Sending HTML call)
+function callApi(method, url, body, callback, responseType) {
   let xhr = new XMLHttpRequest();
   xhr.open(method, url, true);
   xhr.setRequestHeader("Content-Type", "application/json");
@@ -140,49 +143,70 @@ function callApi(method, url, body, callback) {
     "Bearer " + localStorage.getItem("access_token")
   );
   xhr.send(body);
-  xhr.onload = callback;
+  xhr.onload = function () {
+    if (callback != null) {
+      callback.call(xhr, responseType);
+    }
+  };
 }
 
 function songList(data) {
-  let size = data.items.length;
-  song1.data = data.items[randomInt(0, size)];
-  song2.data = data.items[randomInt(0, size)];
-  song3.data = data.items[randomInt(0, size)];
-  document.getElementById("albumImage1").src =
-    song1.data.track.album.images[0].url;
-  document.getElementById("trackTitle1").textContent =
-    song1.data.track.album.name;
-  document.getElementById("trackArtist1").textContent =
-    song1.data.track.album.artists[0].name;
-  song1.isplaying = false;
-  song1.uri = song1.data.track.uri;
+  songlist = [];
+  let size = 0;
+  if (data != null) {
+    size = data.items.length;
+  }
+  let counter = 1;
+  //created 3 song objs for later use
+  for (let i = 0; i < limit; i++) {
+    let newsong = {};
+    newsong.data = data.items[randomInt(0, size)];
+    newsong.isplaying = false;
+    songlist.push(newsong);
+  }
 
-  document.getElementById("albumImage2").src =
-    song2.data.track.album.images[0].url;
-  document.getElementById("trackTitle2").innerHTML =
-    song2.data.track.album.name;
-  document.getElementById("trackArtist2").innerHTML =
-    song2.data.track.album.artists[0].name;
-
-  song2.uri = song2.data.track.uri;
-  song2.isplaying = false;
-
-  document.getElementById("albumImage3").src =
-    song3.data.track.album.images[0].url;
-  document.getElementById("trackTitle3").innerHTML =
-    song3.data.track.album.name;
-
-  document.getElementById("trackArtist3").innerHTML =
-    song3.data.track.album.artists[0].name;
-  song3.uri = song3.data.track.uri;
-  song3.isplaying = false;
+  songlist.forEach((song) => {
+    //getting the cover img for each recommanded song
+    document.getElementById(`albumImage${counter}`).src =
+      song.data.track.album.images[0].url;
+    document.getElementById(`trackTitle${counter}`).textContent =
+      song.data.track.album.name;
+    document.getElementById(`trackArtist${counter}`).textContent =
+      song.data.track.album.artists[0].name;
+    song.isplaying = false;
+    song.uri = song.data.track.uri;
+    counter++;
+  });
 }
 
-function handleSongResponse() {
+function handleResponse(responseType) {
+  console.log(responseType);
   if (this.status == 200) {
-    var data = JSON.parse(this.responseText);
-    console.log("song", data);
-    songList(data);
+    var dataToProcess = JSON.parse(this.responseText);
+    switch (responseType) {
+      case "userID":
+        userID = dataToProcess.id;
+        break;
+      case "Remove":
+        alert("Undo Success!");
+        break;
+      case "PlayList":
+        PlayList(dataToProcess);
+        break;
+      case "songList":
+        songList(dataToProcess);
+        break;
+      case "setDevice":
+        setDevice(dataToProcess);
+        console.log("work");
+        break;
+      case "CreateUserPlaylist":
+        CreateUserPlaylist(dataToProcess);
+        break;
+      default:
+        console.log(this.responseText);
+        break;
+    }
   } else if (this.status == 401) {
     refreshAcessToken();
   } else {
@@ -197,37 +221,12 @@ function PlayList(data) {
   //change button color to indicate loaded
   document.getElementById("playlists").style.backgroundColor =
     "#" + Math.floor(Math.random() * 16777215).toString(16);
-  //console.log(tracks);
-}
-
-function handlePlaylistResponse() {
-  if (this.status == 200) {
-    var data = JSON.parse(this.responseText);
-    console.log(data);
-    PlayList(data);
-  } else if (this.status == 401) {
-    refreshAcessToken();
-  } else {
-    console.log(this.responseText);
-    alert(this.responseText);
-  }
-}
-
-function handlePlayResponse() {
-  if (this.status == 200) {
-    var data = JSON.parse(this.responseText);
-    setDevice(data.devices);
-  } else if (this.status == 401) {
-    refreshAcessToken();
-  } else {
-    console.log(this.responseText);
-    alert(this.responseText);
-  }
+  //general random color
 }
 
 function get_device() {
   let check_device = "https://api.spotify.com/v1/me/player/devices";
-  callApi("GET", check_device, null, handlePlayResponse);
+  callApi("GET", check_device, null, handleResponse, "setDevice");
 }
 
 function switchToDevice(id) {
@@ -235,12 +234,13 @@ function switchToDevice(id) {
   let body = {};
   body.device_ids = [];
   body.device_ids.push(id);
-  callApi("PUT", swichD, JSON.stringify(body), null);
-  console.log(id);
+  callApi("PUT", swichD, JSON.stringify(body), null, null);
   device_id = id;
 }
 
-function setDevice(devices) {
+function setDevice(devicesdata) {
+  devices = devicesdata.devices;
+  console.log("device", devicesdata);
   const deviceList = document.getElementById("deviceList");
   deviceList.innerHTML = ""; // Clear current list
   let default_device = devices[0].id;
@@ -255,112 +255,45 @@ function setDevice(devices) {
   });
 }
 
-// Open modal on button click
-openBtn.onclick = function () {
-  small_window.classList.add("show");
-  get_device();
-};
-
-// Close modal on 'x' click
-closeBtn.onclick = function () {
-  small_window.classList.remove("show");
-};
-
 function play(song) {
   const playapi = "https://api.spotify.com/v1/me/player/play";
   let playpos = 0;
   //record where the song start
-  song.start = Date.now();
-  console.log("start:\n", song);
-  if ("end" in song) {
-    playpos = song.end;
-    console.log(playpos);
-  }
+  // song.start = Date.now();
+  // console.log("start:\n", song);
+  // if ("end" in song) {
+  //   playpos = song.end;
+  //   console.log(playpos);
+  // }
   let body = {};
   body.uris = [song.uri];
   body.position_ms = 0;
-  console.log(body);
+  // console.log(body);
   callApi(
     "PUT",
     playapi + `?device_id=${device_id}`,
     JSON.stringify(body),
+    null,
     null
   );
 }
 
-function pause(song) {
+function pause() {
   // console.log("end:\n", song);
   let pauseAPI = "https://api.spotify.com/v1/me/player/pause";
   //still need to work on pause and resume
-  song.end = Date.now();
-  song.end = song.end - song.start;
-  callApi("PUT", pauseAPI + `?device_id=${device_id}`, null, null);
+  // song.end = Date.now();
+  // song.end = song.end - song.start;
+  callApi("PUT", pauseAPI + `?device_id=${device_id}`, null, null, null);
 }
 
 //need code optimization
-albumImage1.onclick = function () {
-  song2.isplaying = false;
-  song3.isplaying = false;
-  if (song1.isplaying) {
-    pause(song1);
-  } else {
-    play(song1);
-  }
-  song1.isplaying = !song1.isplaying;
-};
-
-albumImage2.onclick = function () {
-  song1.isplaying = false;
-  song3.isplaying = false;
-  if (song2.isplaying) {
-    pause(song2);
-  } else {
-    play(song2);
-  }
-  song2.isplaying = !song2.isplaying;
-};
-
-albumImage3.onclick = function () {
-  song1.isplaying = false;
-  song2.isplaying = false;
-  if (song3.isplaying) {
-    pause(song3);
-  } else {
-    play(song3);
-  }
-  song3.isplaying = !song3.isplaying;
-};
 
 function getUserPlaylist() {
   let getUserIDAPI = "https://api.spotify.com/v1/me";
-  callApi("GET", getUserIDAPI, null, handleUSERIDResponse);
+  callApi("GET", getUserIDAPI, null, handleResponse, "userID");
   let userplaylistAPI = `https://api.spotify.com/v1/users/${userID}/playlists`;
-  callApi("GET", userplaylistAPI, null, handleUSERPlaylistResponse);
-}
-
-function handleUSERIDResponse() {
-  if (this.status == 200) {
-    var data = JSON.parse(this.responseText);
-    userID = data.id;
-  } else if (this.status == 401) {
-    refreshAcessToken();
-  } else {
-    console.log(this.responseText);
-    alert(this.responseText);
-  }
-}
-
-function handleUSERPlaylistResponse() {
-  if (this.status == 200) {
-    var data = JSON.parse(this.responseText);
-    console.log(data);
-    CreateUserPlaylist(data);
-  } else if (this.status == 401) {
-    refreshAcessToken();
-  } else {
-    console.log(this.responseText);
-    alert(this.responseText);
-  }
+  callApi("GET", userplaylistAPI, null, handleResponse, "CreateUserPlaylist");
 }
 
 function CreateUserPlaylist(data) {
@@ -395,9 +328,8 @@ function addSongTOList(playlist_id, track_uri = current_track_uri) {
 
 function handleaddresponse() {
   if (this.status == 201) {
-    var data = JSON.parse(this.responseText);
+    //var data = JSON.parse(this.responseText);
     alert("Successful added to the playlist!");
-    console.log("added");
   } else if (this.status == 401) {
     refreshAcessToken();
   } else {
@@ -413,63 +345,8 @@ function remove_song(playlist_id, track_uri = current_track_uri) {
   let trackobj = {};
   trackobj.uri = track_uri;
   body.tracks.push(trackobj);
-  callApi("DELETE", end, JSON.stringify(body), handlesongRemoveResponse);
+  callApi("DELETE", end, JSON.stringify(body), null, null);
 }
-
-function handlesongRemoveResponse() {
-  if (this.status == 200) {
-    var data = JSON.parse(this.responseText);
-    alert("Undo Success!");
-  } else if (this.status == 401) {
-    refreshAcessToken();
-  } else {
-    console.log(this.responseText);
-    alert(this.responseText);
-  }
-}
-
-const option1 = document.getElementById("option1");
-const option2 = document.getElementById("option2");
-const option3 = document.getElementById("option3");
-const popplaylist = document.getElementById("playlistPopup");
-const closePlaylist = document.getElementById("closePopup");
-
-option1.onclick = function () {
-  current_track_uri = song1.data.track.uri;
-  getUserPlaylist();
-  popplaylist.classList.add("show");
-};
-
-option1_u.onclick = function () {
-  current_track_uri = song1.data.track.uri;
-  remove_song(selected_playlist_id);
-};
-
-option2.onclick = function () {
-  current_track_uri = song2.data.track.uri;
-  getUserPlaylist();
-  popplaylist.classList.add("show");
-};
-
-option2_u.onclick = function () {
-  current_track_uri = song2.data.track.uri;
-  remove_song(selected_playlist_id);
-};
-
-option3.onclick = function () {
-  current_track_uri = song3.data.track.uri;
-  getUserPlaylist();
-  popplaylist.classList.add("show");
-};
-
-option3_u.onclick = function () {
-  current_track_uri = song3.data.track.uri;
-  remove_song(selected_playlist_id);
-};
-
-closePlaylist.onclick = function () {
-  popplaylist.classList.remove("show");
-};
 
 (function ($) {
   var $window = $(window),
@@ -604,11 +481,70 @@ closePlaylist.onclick = function () {
 
   $("#random").click(function () {
     if (device_id == null || device_id == false) {
+      console.log("trigger");
       get_device();
     }
     getSongs();
   });
 
-  //$("#option1").click(function () {});
-  // $("#option2").click(function () {});
+  $("#Show_Devices").click(function () {
+    small_window.classList.add("show");
+    get_device();
+  });
+
+  $(".deviceswindows_close")
+    .eq(0)
+    .click(function () {
+      small_window.classList.remove("show");
+      get_device();
+    });
+
+  $("#option1").click(function () {
+    current_track_uri = songlist[0].data.track.uri;
+    getUserPlaylist();
+    popplaylist.classList.add("show");
+  });
+  $("#option1_u").click(function () {
+    current_track_uri = songlist[0].data.track.uri;
+    remove_song(selected_playlist_id);
+  });
+
+  $("#option2").click(function () {
+    current_track_uri = songlist[1].data.track.uri;
+    getUserPlaylist();
+    popplaylist.classList.add("show");
+  });
+  $("#option2_u").click(function () {
+    current_track_uri = songlist[1].data.track.uri;
+    remove_song(selected_playlist_id);
+  });
+
+  $("#option3").click(function () {
+    current_track_uri = songlist[2].data.track.uri;
+    getUserPlaylist();
+    popplaylist.classList.add("show");
+  });
+  $("#option3_u").click(function () {
+    current_track_uri = songlist[2].data.track.uri;
+    remove_song(selected_playlist_id);
+  });
+
+  $("#closePopup").click(function () {
+    popplaylist.classList.remove("show");
+  });
+
+  $(".Recommends .albumImage").click(function () {
+    let index = $(this).parent().index(); //get the index of the click image
+    for (let i = 0; i < limit; i++) {
+      if (i != index) {
+        songlist[i].isplaying = false;
+      }
+    }
+    if (songlist[index].isplaying) {
+      pause();
+    } else {
+      play(songlist[index]);
+    }
+    songlist[index].isplaying = !songlist[index].isplaying;
+  });
 })(jQuery);

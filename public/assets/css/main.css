@@ -3003,7 +3003,7 @@ button:active,
   display: block;
 }
 
-#deviceList:hover {
+#deviceList li:hover {
   background-color: #159be3; /* Spotify green */
   cursor: pointer;
 }
