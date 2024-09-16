@@ -541,11 +541,15 @@ function remove_song(playlist_id, track_uri = current_track_uri) {
     popplaylist.classList.remove("show");
   });
 
-  $(".Recommends .albumImage").click(function () {
-    let index = $(this).parent().index(); //get the index of the click image
+  $(".Recommends .play-button").click(function () {
+    let index = $(this).closest(".Rec_one, .Rec_two, .Rec_three").index(); //get the index of the click image
     for (let i = 0; i < limit; i++) {
       if (i != index) {
         songlist[i].isplaying = false;
+        $(".Recommends .image-container")
+          .eq(i)
+          .find(".play-button")
+          .removeClass("playing");
       }
     }
     if (songlist[index].isplaying) {
@@ -554,5 +558,6 @@ function remove_song(playlist_id, track_uri = current_track_uri) {
       play(songlist[index]);
     }
     songlist[index].isplaying = !songlist[index].isplaying;
+    $(this).toggleClass("playing", songlist[index].isplaying);
   });
 })(jQuery);

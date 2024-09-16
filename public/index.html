@@ -13,6 +13,10 @@
       content="width=device-width, initial-scale=1, user-scalable=no"
     />
     <link rel="stylesheet" href="assets/css/main.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body class="is-preload" onload="pageload()">
     <!-- Header -->
@@ -35,7 +39,7 @@
                 ><span class="icon solid fa-music">Spotify</span></a
               >
             </li>
-            <li>
+            <!-- <li>
               <a href="#portfolio" id="portfolio-link"
                 ><span class="icon solid fa-comment">Chatme</span></a
               >
@@ -44,7 +48,7 @@
               <a href="#about" id="about-link"
                 ><span class="icon solid fa-envelope">Mails</span></a
               >
-            </li>
+            </li> -->
             <li>
               <a href="#contact" id="contact-link"
                 ><span class="icon solid fa-user">Contact</span></a
@@ -57,31 +61,35 @@
       <div class="bottom">
         <!-- Social Icons -->
         <ul class="icons">
-          <li>
+          <!-- <li>
             <a href="#" class="icon brands fa-twitter"
               ><span class="label">Twitter</span></a
             >
-          </li>
+          </li> -->
           <li>
-            <a href="#" class="icon brands fa-facebook-f"
+            <a
+              href="https://www.linkedin.com/in/zhenyu-jiang-845a08235/"
+              class="icon brands fa-linkedin"
               ><span class="label">Facebook</span></a
             >
           </li>
           <li>
-            <a href="#" class="icon brands fa-github"
+            <a href="https://github.com/XDawn66" class="icon brands fa-github"
               ><span class="label">Github</span></a
             >
           </li>
           <li>
-            <a href="#" class="icon brands fa-dribbble"
-              ><span class="label">Dribbble</span></a
+            <a
+              href="https://xdawn66.github.io/ZhenyuJiang.github.io/"
+              class="icon brands fa-dribbble"
+              ><span class="label">website</span></a
             >
           </li>
-          <li>
+          <!-- <li>
             <a href="#" class="icon solid fa-envelope"
               ><span class="label">Email</span></a
             >
-          </li>
+          </li> -->
         </ul>
       </div>
     </div>
@@ -98,37 +106,65 @@
           </header>
 
           <footer>
-            <button id="login">Login</button>
-            <button id="playlists">Get Random Playlist</button>
-            <button id="random">Give me some songs!</button>
+            <div class="topbuttons">
+              <button id="login">Login</button>
+              <button id="playlists">Get Random Playlist</button>
+              <button id="random">Give me some songs!</button>
+            </div>
           </footer>
           <div class="Recommends">
             <div class="Rec_one">
-              <img
-                id="albumImage1"
-                class="albumImage"
-                src="images/haromain.jpg"
-              />
-              <div id="trackTitle1">example1</div>
-              <div id="trackArtist1">alalala</div>
+              <div class="image-container">
+                <img
+                  id="albumImage1"
+                  class="albumImage"
+                  src="images/haromain.jpg"
+                />
+                <div class="overlay">
+                  <button class="play-button">
+                    <span class="play-icon"> &#9658;</span>
+                    <span class="pause-icon">&#10074;&#10074;</span>
+                  </button>
+                </div>
+              </div>
+              <div id="trackTitle1">song title</div>
+              <div id="trackArtist1">artist</div>
             </div>
             <div class="Rec_two">
-              <img
-                id="albumImage2"
-                class="albumImage"
-                src="images/haromain.jpg"
-              />
-              <div id="trackTitle2">example1</div>
-              <div id="trackArtist2">alalala</div>
+              <div class="image-container">
+                <img
+                  id="albumImage2"
+                  class="albumImage"
+                  src="images/haromain.jpg"
+                />
+                <div class="overlay">
+                  <button class="play-button">
+                    <span class="play-icon">&#9658; </span>
+
+                    <span class="pause-icon">&#10074;&#10074;</span>
+                  </button>
+                </div>
+              </div>
+              <div id="trackTitle2">song title</div>
+              <div id="trackArtist2">artist</div>
             </div>
             <div class="Rec_three">
-              <img
-                id="albumImage3"
-                class="albumImage"
-                src="images/haromain.jpg"
-              />
-              <div id="trackTitle3">example1</div>
-              <div id="trackArtist3">alalala</div>
+              <div class="image-container">
+                <img
+                  id="albumImage3"
+                  class="albumImage"
+                  src="images/haromain.jpg"
+                />
+                <div class="overlay">
+                  <button class="play-button">
+                    <span class="play-icon">&#9658; </span>
+
+                    <span class="pause-icon">&#10074;&#10074;</span>
+                  </button>
+                </div>
+              </div>
+              <div id="trackTitle3">song title</div>
+              <div id="trackArtist3">artist</div>
             </div>
           </div>
           <!-- Trigger Button -->
@@ -169,7 +205,7 @@
         </div>
       </section>
 
-      <!-- Portfolio -->
+      <!-- Portfolio
       <section id="portfolio" class="two">
         <div class="container">
           <header>
@@ -242,7 +278,7 @@
         </div>
       </section>
 
-      <!-- About Me -->
+      About Me
       <section id="about" class="three">
         <div class="container">
           <header>
@@ -262,7 +298,7 @@
             donec curae mus vel quisque sociis nec ornare iaculis.
           </p>
         </div>
-      </section>
+      </section> -->
 
       <!-- Contact -->
       <section id="contact" class="four">
@@ -271,13 +307,7 @@
             <h2>Contact</h2>
           </header>
 
-          <p>
-            Elementum sem parturient nulla quam placerat viverra mauris non cum
-            elit tempus ullamcorper dolor. Libero rutrum ut lacinia donec curae
-            mus. Eleifend id porttitor ac ultricies lobortis sem nunc orci
-            ridiculus faucibus a consectetur. Porttitor curae mauris urna mi
-            dolor.
-          </p>
+          <p>Please let me know if you have any question!</p>
 
           <form method="post" action="#">
             <div class="row">

@@ -235,9 +235,21 @@ h6 a strong {
 }
 
 h2 {
-  font-size: 2em;
+  /* font-size: 48px;
   letter-spacing: -1px;
-  background-color: #6a7075;
+  font-family: "Press Start 2P", cursive;
+  image-rendering: pixelated;
+  color: #4caf50; */
+  font-family: "Press Start 2P", cursive;
+  font-size: 32px;
+  color: #4caf50;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 0 #333, 4px 4px 0 #555, 6px 6px 0 #777;
+  padding: 10px;
+  display: inline-block;
+  background-color: #605b5b89;
+  image-rendering: pixelated;
 }
 
 h2.alt {
@@ -2100,32 +2112,12 @@ button:active,
   background-color: #7eaeac;
 }
 
-.BTN1 {
-  width: 10px;
-  height: 10px;
-  margin-top: 0px;
-  padding: 20px;
-}
-
-.BTN2 {
-  width: 10px;
-  height: 10px;
-  padding: 20px;
-  margin-left: 0px;
-}
-
-.BTN3 {
-  width: 10px;
-  height: 10px;
-  margin-bottom: 0px;
-  padding: 20px;
-}
-
 .BTN1,
 .BTN2,
 .BTN3 {
-  margin-right: 400px;
   display: flex;
+  width: 150px;
+  height: 130px;
 }
 
 .BTN1 button,
@@ -2133,44 +2125,53 @@ button:active,
 .BTN3 button {
   width: 200px;
   height: 50px;
-  margin-right: 10px;
-  margin-left: 0px;
+  margin-right: 5%;
+  margin-left: 10%;
   text-align: center;
 }
 
 .addsongs {
+  justify-content: center;
   display: flex;
+  gap: 26%;
+  margin-right: 120px;
 }
 
+.topbuttons {
+  display: flex;
+  justify-content: center;
+  padding: 5%;
+  gap: 20%; /* 20% gap between the buttons (based on the width of the container) */
+}
+
+.topbuttons button {
+  margin: 10px;
+  padding: 20px 20px;
+}
 #login {
-  width: 130px;
-  padding: 20px;
-  margin-left: 0px;
+  width: 140px;
 }
 
 #playlists {
-  width: 130px;
-  padding: 20px;
-  margin-right: 0px;
+  width: 150px;
 }
 
 #random {
-  margin-right: 0px;
   width: 230px;
-  padding: 20px;
 }
 
 /* Recommends */
 .Recommends {
   display: flex;
-  justify-content: space-between; /* Adjust spacing between items */
-  margin-top: 110px;
-  margin-bottom: 0px;
+  justify-content: center; /* Adjust spacing between items */
+  /* margin-top: 110px;
+  margin-bottom: 0px; */
 }
 
 .Rec_one,
 .Rec_two,
 .Rec_three {
+  padding: 7%;
   flex-basis: 20%; /* Adjust the width of each item */
   text-align: left; /* Center text within each div */
 }
@@ -2180,6 +2181,8 @@ button:active,
 #albumImage3 {
   width: 250px;
   margin-left: auto;
+  border-radius: 4px;
+  border: 5px solid black;
 }
 
 #trackTitle1,
@@ -2187,6 +2190,8 @@ button:active,
 #trackTitle3 {
   width: 250px;
   background-color: #0e201f;
+  padding-left: 5%;
+  border-radius: 4px 4px 0 0;
 }
 
 #trackArtist1,
@@ -2196,6 +2201,8 @@ button:active,
   background-color: #000000;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: #ff4512;
+  padding-left: 5%;
+  border-radius: 0 0 4px 4px;
 }
 /* Item */
 
@@ -2399,7 +2406,7 @@ button:active,
 /* Footer */
 
 #footer {
-  margin-left: 200px;
+  /* margin-left: 200px; */
   text-align: center;
   background-color: #dce3e2;
   padding: 3em 0 4em 0;
@@ -2478,7 +2485,12 @@ button:active,
 
 #main > section.one {
   background-color: #6ad9a9e2;
-  /* background-image: url("../../images/banner.jpg"); */
+  background-image: url("../../images/choice4.jpg");
+  background-size: cover; /* Make sure the image covers the entire viewport */
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Prevent the image from repeating */
+  background-attachment: fixed; /* Fix the image in place while scrolling */
+  margin: 0; /* Remove default body margin */
 }
 
 #main > section.two {
@@ -2929,6 +2941,7 @@ button:active,
   font-size: 18px;
   cursor: pointer;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
 }
 
 .popup {
@@ -3006,4 +3019,75 @@ button:active,
 #deviceList li:hover {
   background-color: #159be3; /* Spotify green */
   cursor: pointer;
+  border-radius: 10px;
+}
+
+.image-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Image styling */
+.image-container img {
+  display: block;
+  height: auto;
+}
+
+/* Overlay styling */
+.overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* Center overlay */
+  background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black */
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.3s ease;
+}
+
+/* Show overlay on hover */
+.image-container:hover .overlay {
+  opacity: 1;
+}
+
+/* Play button styling */
+.play-button {
+  background-color: #070807; /* Spotify green */
+  border: none;
+  border-radius: 50%;
+  /* Circular button */
+  width: 30px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 24px;
+  color: white;
+  z-index: 1; /* Ensure button is above other content */
+  margin-right: 85%;
+  border: 5px solid rgb(255, 255, 255);
+}
+
+.play-icon,
+.pause-icon {
+  display: block;
+}
+
+.pause-icon {
+  display: none; /* Hide pause icon initially */
+}
+
+/* Show pause icon when playing */
+.play-button.playing .play-icon {
+  display: none;
+}
+
+.play-button.playing .pause-icon {
+  display: inline;
 }
