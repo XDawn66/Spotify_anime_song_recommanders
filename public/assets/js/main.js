@@ -201,7 +201,6 @@ function handleResponse(responseType) {
         break;
       case "setDevice":
         setDevice(dataToProcess);
-        console.log("work");
         break;
       case "CreateUserPlaylist":
         CreateUserPlaylist(dataToProcess);
@@ -492,6 +491,9 @@ function remove_song(playlist_id, track_uri = current_track_uri) {
       console.log("trigger");
       get_device();
     }
+    $(".Recommends .image-container")
+      .find(".play-button")
+      .removeClass("playing"); //make sure the playing state for all songs is false
     getSongs();
   });
 
