@@ -2,6 +2,12 @@ A website that can recommend the most recent popular anime songs through spotify
 
 How it works:
 
+run the following code in the terminal
+
+```
+node app.js
+```
+
 -Login in and enter your client id and client secret
 
 -click the getplaylist button until u see it change color (different colors mean different playlists)
