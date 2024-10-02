@@ -15,7 +15,7 @@ in your terminal to see if any errors were shown.
 3. Make sure you go to the Spotify developer website to get your personal client ID and client secret. You can follow this tutorial as a reference:
 https://www.youtube.com/watch?v=mBgg9i1ghNw
 
-!!MAKE SURE YOU ALSO SET THE Redirect URI to http://localhost:5500!!!
+!!MAKE SURE YOU ALSO SET THE Redirect URI to http://localhost:5500/!!!
 This is the default setting, you can change it to any website URI you want as long as you change the variable called redirect_uri in public\assets\js\main.js and the Spotify developer website
 
 5. run the following code in the terminal
